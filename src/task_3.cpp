@@ -145,17 +145,17 @@ int main(int argc, char * argv[])
         double abs_angular_velocity = std::abs(angular_velocity);
         double angle_threshold;
         if (abs_angular_velocity >= 7.0) {
-          angle_threshold = 0.15;  // 高速：约8.6度
+          angle_threshold = 0.15;  
         } else if (abs_angular_velocity >= 4.0) {
-          angle_threshold = 0.11;  // 中速：约6.9度
+          angle_threshold = 0.11;  
         } else {
-          angle_threshold = 0.10;  // 低速：约5.7度
+          angle_threshold = 0.10;  
         }
         
         //判断是否开火
         bool is_aimed = (angle_diff < angle_threshold);
         
-        //云台瞄准目标中心，保持静止
+        //云台瞄准目标中心，保持静止（根据大作业tips）
         double target_yaw = center_yaw;
         double target_pitch = -center_pitch;
         
