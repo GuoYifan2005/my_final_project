@@ -23,13 +23,21 @@ Target::Target(
 {
   priority = armor.priority;
 
-  // TODO: 根据下方注释提示，补全x0
+  // 根据装甲板信息初始化状态向量
   // x vx y vy z vz a w r l h
-  // a: angle
-  // w: angular velocity
-  // l: r2 - r1
-  // h: z2 - z1
-  Eigen::VectorXd x0{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};  //初始化预测量
+  // a: angle, w: angular velocity, l: r2 - r1, h: z2 - z1
+  Eigen::VectorXd x0(11);
+  x0[0] = armor.xyz_in_world[0];  // x: 装甲板世界坐标x
+  x0[1] = 0.0;                    // vx: x方向速度初始为0
+  x0[2] = armor.xyz_in_world[1];  // y: 装甲板世界坐标y  
+  x0[3] = 0.0;                    // vy: y方向速度初始为0
+  x0[4] = armor.xyz_in_world[2];  // z: 装甲板世界坐标z
+  x0[5] = 0.0;                    // vz: z方向速度初始为0
+  x0[6] = armor.ypr_in_world[0];  // a: 装甲板角度
+  x0[7] = 0.0;                    // w: 角速度初始为0
+  x0[8] = radius;                 // r: 目标半径
+  x0[9] = 0.0;                    // l: 长短轴差初始为0
+  x0[10] = 0.0;                   // h: 高度差初始为0
   Eigen::MatrixXd P0 = P0_dig.asDiagonal();
 
   // 防止夹角求和出现异常值
@@ -72,9 +80,9 @@ void Target::predict(double dt)
   // https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/07-Kalman-Filter-Math.ipynb
   double v1, v2;
 
-  // TODO: 根据实际情况，调整v1与v2
-  v1 = 1;  // 加速度方差
-  v2 = 1;  // 角加速度方差
+  // 根据实际情况调整噪声参数
+  v1 = 0.02;  // 加速度方差
+  v2 = 2.0;  // 角加速度方差
 
   auto a = dt * dt * dt * dt / 4;
   auto b = dt * dt * dt / 2;
